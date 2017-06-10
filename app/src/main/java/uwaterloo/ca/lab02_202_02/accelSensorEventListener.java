@@ -25,14 +25,20 @@ public class accelSensorEventListener implements SensorEventListener {//Creates 
 
 
     public void onSensorChanged(SensorEvent se){//function for when a reading of the acceleromter values change
-
+        /*
+        This is the filter
+         */
+        int CONSTANT = 5; //This is the constant used to smooth the values
         //smoothes values of the accelerometer
-        smoothedValues[0] += (se.values[0]-smoothedValues[0])/5;
-        smoothedValues[1] += (se.values[1]-smoothedValues[1])/5;
-        smoothedValues[2] += (se.values[2]-smoothedValues[2])/5;
+        smoothedValues[0] += (se.values[0]-smoothedValues[0])/CONSTANT;
+        smoothedValues[1] += (se.values[1]-smoothedValues[1])/CONSTANT;
+        smoothedValues[2] += (se.values[2]-smoothedValues[2])/CONSTANT;
 
         graph.addPoint(smoothedValues);//adds current smoothed values to the graph
 
+        /*
+        This is recording 100 values for analyzing, first in last out
+         */
         //updates the previous 100 values to include the current values and to exclude the 101st values
         for (int j=0; j<3; j++){
             for (int i = 99; i>=0; i-- ){
@@ -44,6 +50,9 @@ public class accelSensorEventListener implements SensorEventListener {//Creates 
             }
         }
 
+        /*
+        Links accel listener to the statemachine
+         */
         //checks current state and creates appropriate text for it
         switch (stateMachine.getCurrentState()) {
 
